@@ -1,0 +1,10 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://10.203.18.112:8080
+functions:
+  double:
+    lang: rust
+    handler: ./double
+    image: ccicconetti/double:latest
+

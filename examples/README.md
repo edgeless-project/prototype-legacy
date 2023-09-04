@@ -1,7 +1,7 @@
 # Examples
 
 - `incr`: expects that a JSON message is posted with a number in `input` and returns a JSON file with the number incremented in the `output` field
-
+- `double`: same as `incr` but doubles the input
 
 ## How to build
 
