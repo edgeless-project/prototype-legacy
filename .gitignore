@@ -3,3 +3,4 @@ build
 .secrets
 target
 faasd[12]
+dockerhubpasswd.txt

@@ -29,11 +29,18 @@ Deploy the function `incr`, which reads a single integer number and increments i
 
 ```bash
 cd faasd1 && . environment && cd ..
+faas template pull https://github.com/openfaas-incubator/rust-http-template
 faas-cli deploy -f examples/incr.yml --gateway $OPENFAAS_URL
 ```
 
 Try it (it should reply `100`):
 
 ```bash
-curl $OPENFAAS_URL/function/incr -d 99
+curl $OPENFAAS_URL/function/incr -d "{\"input\":99}"
+```
+
+or:
+
+```bash
+echo  "{\"input\":99}" | faas-cli invoke incr
 ```
