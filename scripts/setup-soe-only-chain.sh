@@ -9,7 +9,7 @@ function start_edgecomputer() {
     configuration_endpoint=$ADDRESS:$((PORT++))
     companion_endpoint=$ADDRESS:$((PORT++))
     echo "starting companion edgerouter at $companion_endpoint (configuration: $configuration_endpoint)"
-    $WORKING_DIR/edgerouter \
+    GLOG_v=$VERBOSITY $EXEC_DIR/edgerouter \
         --server-conf type=grpc \
         --configuration-endpoint $configuration_endpoint \
         --server-endpoint $companion_endpoint >& edgerouter-$PORT.log &
@@ -49,7 +49,7 @@ EOF
 
     computer_endpoint=$ADDRESS:$((PORT++)) 
     echo "starting edgecomputer for $FUNCTION at $computer_endpoint"
-    $WORKING_DIR/edgecomputer \
+    GLOG_v=$VERBOSITY $EXEC_DIR/edgecomputer \
         --server-conf type=grpc \
         --computer-type sim \
         --asynchronous \
@@ -60,7 +60,7 @@ EOF
     rm computer.json
 
     echo "configuring the companion edgerouter for $FUNCTION"
-    $WORKING_DIR/forwardingtableclient \
+    $EXEC_DIR/forwardingtableclient \
         --server-endpoint $configuration_endpoint \
         --action change \
         --lambda $FUNCTION \
@@ -73,7 +73,7 @@ start_main_edgerouter() {
     main_endpoint=$ADDRESS:$((PORT++))
     main_conf_endpoint=$ADDRESS:$((PORT++))
     echo "starting main edgerouter at $main_endpoint (configuration: $main_conf_endpoint)"
-    $WORKING_DIR/edgerouter \
+    GLOG_v=$VERBOSITY $EXEC_DIR/edgerouter \
         --server-conf type=grpc \
         --configuration-endpoint $main_conf_endpoint \
         --server-endpoint $main_endpoint >& edgerouter-$PORT.log &
@@ -88,7 +88,7 @@ populate_routes() {
                 continue
             fi
             echo "add route ${ann_functions[$i]} -> ${ann_destinations[$i]}"
-            $WORKING_DIR/forwardingtableclient \
+            $EXEC_DIR/forwardingtableclient \
                 --server-endpoint $configuration_endpoint \
                 --action change \
                 --lambda ${ann_functions[$i]} \
@@ -107,7 +107,7 @@ start_client() {
   "state-sizes" : {}
 }
 EOF
-    ./edgeclient \
+    GLOG_v=$VERBOSITY $EXEC_DIR/edgeclient \
         --max-requests 1 \
         --content hello \
         --chain-conf type=file,filename=chain.json \
@@ -117,8 +117,8 @@ EOF
 }
 
 
-if [ -z $WORKING_DIR ] ; then
-    WORKING_DIR=$PWD
+if [ -z $EXEC_DIR ] ; then
+    EXEC_DIR=$PWD
 fi
 if [ -z $ADDRESS ] ; then
     ADDRESS=localhost
@@ -126,11 +126,14 @@ fi
 if [ -z $PORT ] ; then
     PORT=10000
 fi
+if [ -z $VERBOSITY ] ; then
+    VERBOSITY=0
+fi
 
 executables="edgecomputer edgerouter forwardingtableclient"
 
 for e in $executables ; do
-    if [ ! -x "$WORKING_DIR/$e" ] ; then
+    if [ ! -x "$EXEC_DIR/$e" ] ; then
         echo "missing executable: $e"
         exit 1
     fi

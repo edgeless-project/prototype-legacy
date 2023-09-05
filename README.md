@@ -44,3 +44,29 @@ or:
 ```bash
 echo  "99" | faas-cli invoke incr
 ```
+
+## ServerlessOnEdge-only experiment
+
+First, enter the ServerlessOnEdge VM:
+
+```
+sudo multipass shell soe-bionic
+```
+
+Then, from the VM run:
+
+```
+wget https://raw.githubusercontent.com/edgeless-project/prototype-legacy/main/scripts/setup-soe-only-chain.sh
+chmod 755 setup-soe-only-chain.sh
+EXEC_DIR=serverlessonedge/build/debug/Executables ADDRESS=$(hostname -I) ./setup-soe-only-chain.sh
+```
+
+The script will execute in background:
+
+- two edgecomputer simulators, serving respectively `lambda1` and `lambda2` functions
+- two local (called _companion_) edgerouters, interconnected to one edgecomputer each
+- one main edgerouter, which provides the client with access to the FaaS platforms
+
+and it will configure the forwarding tables of all the edgerouters.
+
+Afterwards, it will create an edgeclient that will execute a simple function chain `lambda1-lambda2` with fixed content.
