@@ -36,11 +36,11 @@ faas-cli deploy -f examples/incr.yml --gateway $OPENFAAS_URL
 Try it (it should reply `100`):
 
 ```bash
-curl $OPENFAAS_URL/function/incr -d "{\"input\":99}"
+curl $OPENFAAS_URL/function/incr -d 99
 ```
 
 or:
 
 ```bash
-echo  "{\"input\":99}" | faas-cli invoke incr
+echo  "99" | faas-cli invoke incr
 ```

@@ -11,7 +11,7 @@ See [OpenFaaS template for Rust](https://github.com/openfaas-incubator/rust-http
 faas template pull https://github.com/openfaas-incubator/rust-http-template
 ```
 
-Add `RUN apk add --no-cache musl-dev` before `cargo build` in `template/rust/Dockerfile`, then you can build the function:
+Build the function:
 
 ```
 DOCKER_BUILDKIT=1 faas-cli build -f incr.yml
