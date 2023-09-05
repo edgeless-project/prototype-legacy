@@ -58,7 +58,7 @@ Then, from the VM run:
 ```
 wget https://raw.githubusercontent.com/edgeless-project/prototype-legacy/main/scripts/setup-soe-only-chain.sh
 chmod 755 setup-soe-only-chain.sh
-EXEC_DIR=serverlessonedge/build/debug/Executables ADDRESS=$(hostname -I) ./setup-soe-only-chain.sh
+EXEC_DIR=serverlessonedge/build/debug/Executables ADDRESS=$(hostname -I | cut -f 1 -d ' ') ./setup-soe-only-chain.sh
 ```
 
 The script will execute in background:
